@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iris Flower Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .button {
+            width: 100%;
+            padding: 10px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .button:hover {
+            background-color: #4cae4c;
+        }
+        .result {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Iris Flower Predictor</h2>
+    <form id="irisForm">
+        <div class="input-group">
+            <label for="sepalLength">Sepal Length (cm):</label>
+            <input type="number" id="sepalLength" name="sepalLength" step="0.1" required>
+        </div>
+        <div class="input-group">
+            <label for="sepalWidth">Sepal Width (cm):</label>
+            <input type="number" id="sepalWidth" name="sepalWidth" step="0.1" required>
+        </div>
+        <div class="input-group">
+            <label for="petalLength">Petal Length (cm):</label>
+            <input type="number" id="petalLength" name="petalLength" step="0.1" required>
+        </div>
+        <div class="input-group">
+            <label for="petalWidth">Petal Width (cm):</label>
+            <input type="number" id="petalWidth" name="petalWidth" step="0.1" required>
+        </div>
+        <button type="submit" class="button">Predict Flower</button>
+    </form>
+
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+  document.getElementById('irisForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    // Get the input values
+    const sepalLength = document.getElementById('sepalLength').value;
+    const sepalWidth = document.getElementById('sepalWidth').value;
+    const petalLength = document.getElementById('petalLength').value;
+    const petalWidth = document.getElementById('petalWidth').value;
+
+    // Prepare data to send
+    const inputData = {
+        sepalLength: parseFloat(sepalLength),
+        sepalWidth: parseFloat(sepalWidth),
+        petalLength: parseFloat(petalLength),
+        petalWidth: parseFloat(petalWidth)
+    };
+
+    // Send the data to the backend API for prediction
+    fetch('/predict', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(inputData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Display the result in the result div
+        document.getElementById('result').innerText = `Predicted Species: ${data.prediction}`;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('result').innerText = 'Error occurred. Please try again.';
+    });
+});
+
+</script>
+
+</body>
+</html>
